@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Sorteos Premium Vzla - Registro y envío de comprobante de participación.">
+  <title>Sorteos Premium Vzla</title>
+  <style>
+    :root{--yellow:#F0B90B;--dark:#1E2329;--darker:#0B0E11;--light:#EAECEF;--gray:#B7BDC6;--green:#0ECB81}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;padding:24px 14px;display:grid;place-items:center;background:radial-gradient(circle at top,#252b34,var(--darker) 58%);color:var(--light);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    .container{width:min(100%,460px);background:var(--dark);padding:28px;border:1px solid #343b45;border-radius:18px;box-shadow:0 18px 55px #0008}
+    .brand{font-size:1.25rem;font-weight:800;letter-spacing:.4px;color:var(--yellow);text-align:center;margin-bottom:22px}
+    h1,h2{margin:0 0 12px;text-align:center}
+    h1{font-size:1.55rem;color:var(--yellow)} h2{font-size:1.25rem}
+    p{line-height:1.5}
+    .muted{color:var(--gray);font-size:.92rem;text-align:center}
+    .step{display:none}.step.active{display:block;animation:fade .25s}
+    @keyframes fade{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+    label{display:block;margin:13px 0 6px;color:var(--gray);font-size:.9rem}
+    input{width:100%;padding:13px;border:1px solid #424a55;border-radius:8px;background:var(--darker);color:var(--light);font:inherit}
+    input:focus{outline:2px solid var(--yellow);border-color:transparent}
+    input[type=file]{font-size:.85rem}
+    button{width:100%;border:0;border-radius:8px;padding:14px;margin-top:16px;background:var(--yellow);color:var(--darker);font-size:1rem;font-weight:800;cursor:pointer}
+    button:hover{filter:brightness(1.07)} button.secondary{background:#343b45;color:var(--light)}
+    .panel{margin:18px 0;padding:16px;background:var(--darker);border:1px solid #343b45;border-radius:12px;text-align:center}
+    .qr{display:block;width:min(100%,280px);height:auto;margin:12px auto;background:white;padding:8px;border-radius:8px}
+    .id{font:700 1.3rem ui-monospace,monospace;color:var(--yellow);word-break:break-word}
+    .copy{width:auto;margin:10px 0 0;padding:9px 15px;font-size:.9rem}
+    .notice{padding:12px;border-radius:8px;background:#332b12;color:#f6d978;font-size:.86rem}
+    .success{color:var(--green);font-weight:700}
+    .ticket{font-size:2rem;font-weight:900;letter-spacing:2px;color:var(--yellow);text-align:center;margin:18px 0}
+    .hidden{display:none}
+    footer{margin-top:22px;padding-top:14px;border-top:1px solid #343b45;color:#8f98a5;text-align:center;font-size:.78rem}
+    a{color:var(--yellow)}
+    @media(max-width:420px){.container{padding:21px}.brand{font-size:1.1rem}}
+  </style>
+</head>
+<body>
+<main class="container">
+  <div class="brand">🎟️ SORTEOS PREMIUM VZLA</div>
+
+  <section id="step1" class="step active">
+    <h1>Participa en el sorteo</h1>
+    <p class="muted">Completa tus datos para iniciar tu registro.</p>
+    <form id="registration">
+      <label for="fullName">Nombre completo</label>
+      <input id="fullName" name="fullName" autocomplete="name" maxlength="100" required>
+      <label for="email">Correo electrónico</label>
+      <input id="email" name="email" type="email" autocomplete="email" maxlength="150" required>
+      <label for="phone">Teléfono (WhatsApp)</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" required>
+      <label class="muted" style="display:flex;gap:9px;text-align:left;align-items:flex-start;margin-top:16px">
+        <input id="consent" type="checkbox" required style="width:auto;margin-top:4px">
+        <span>Acepto que mis datos se utilicen para gestionar mi participación y contactarme sobre el sorteo. He leído la información de privacidad.</span>
+      </label>
+      <button type="submit">Continuar al pago</button>
+    </form>
+  </section>
+
+  <section id="step2" class="step">
+    <h2>Pago con Binance Pay</h2>
+    <p class="muted">Monto indicado para participar: <strong>$10 USDT</strong>.</p>
+    <div class="panel">
+      <img class="qr" src="assets/binance-pay-qr.jpg" alt="Código QR de pago Binance proporcionado por el organizador">
+      <p class="muted">Escanea el código QR desde la aplicación Binance.</p>
+      <div class="muted">ID BINANCE PAY</div>
+      <div class="id" id="binanceId">1280365306</div>
+      <button class="copy" type="button" id="copyId">Copiar ID</button>
+    </div>
+    <div class="notice">Antes de enviar, verifica en Binance que el destinatario y el monto sean correctos. No compartas contraseñas, códigos de acceso ni frases de recuperación.</div>
+    <form id="receiptForm">
+      <label for="receipt">Comprobante de pago (imagen)</label>
+      <input id="receipt" type="file" accept="image/png,image/jpeg,image/webp" required>
+      <p class="muted">El comprobante será revisado por el organizador. Subirlo no significa que el pago ya esté confirmado.</p>
+      <button type="submit">Enviar comprobante</button>
+      <button class="secondary" type="button" id="back">Volver</button>
+    </form>
+  </section>
+
+  <section id="step3" class="step">
+    <h2>Comprobante enviado</h2>
+    <p class="success" style="text-align:center">Tu información está lista para revisión.</p>
+    <div class="panel">
+      <div class="muted">Estado</div>
+      <div class="id" style="font-size:1.1rem">PENDIENTE DE VERIFICACIÓN</div>
+      <p class="muted" id="summary"></p>
+    </div>
+    <div class="panel" style="background:linear-gradient(135deg,#f0b90b,#ffcf33);color:#111;border:0">
+      <h2 style="color:#111;margin-bottom:8px">Gracias por participar..</h2>
+      <p style="color:#111;margin:0 0 8px">Su nro. de rifa es:</p>
+      <div class="ticket" id="ticketNumber" style="color:#f0b90b;background:#111;border-radius:12px;padding:12px;margin:8px auto;max-width:230px;font-size:2.5rem">0000</div>
+    </div>
+    <div class="panel">
+      <p style="margin:0">Su información esta siendo validada, su verificación sera enviada al su correo y nro. de WhatsApp.</p>
+    </div>
+    <button type="button" id="restart">Volver al inicio</button>
+  </section>
+
+  <footer>
+    Sorteos Premium Vzla · Binance es una marca de terceros y este sitio no está afiliado ni respaldado por Binance.<br>
+    Participa únicamente si has revisado las reglas, condiciones, permisos y normativa aplicable al sorteo.
+  </footer>
+</main>
+<script>
+  const $ = id => document.getElementById(id);
+  let participant = null;
+  function show(step){
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    $(step).classList.add('active');
+  }
+  $('registration').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!e.currentTarget.reportValidity()) return;
+    participant = {
+      name: $('fullName').value.trim(),
+      email: $('email').value.trim(),
+      phone: $('phone').value.trim()
+    };
+    show('step2');
+  });
+  $('copyId').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText('1280365306'); $('copyId').textContent='ID copiado'; }
+    catch { $('copyId').textContent='ID: 1280365306'; }
+  });
+  $('back').addEventListener('click', () => show('step1'));
+  $('receiptForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!e.currentTarget.reportValidity()) return;
+    const file = $('receipt').files[0];
+    if (!file || file.size > 5*1024*1024) {
+      alert('Selecciona una imagen válida de hasta 5 MB.');
+      return;
+    }
+    $('summary').textContent = participant.name + ' · ' + participant.email + ' · Archivo seleccionado: ' + file.name;
+    // Número aleatorio de cuatro dígitos (0000 a 9999).
+    // En esta versión estática es solo una asignación visual/local; no garantiza unicidad.
+    const raffleNumber = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    $('ticketNumber').textContent = raffleNumber;
+    show('step3');
+  });
+  $('restart').addEventListener('click', () => {
+    $('registration').reset(); $('receiptForm').reset(); participant=null; show('step1');
+  });
+</script>
+</body>
+</html>
